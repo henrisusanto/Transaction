@@ -1,6 +1,6 @@
 import { MemberRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/member.repositoryinterface'
 import { PointRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/point.repositoryinterface'
-import { ActivityRateRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/activityrate.repositoryinterface'
+import { PointTypeRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/pointtype.repositoryinterface'
 import { TransactionRepositoryInterface } from '../RepositoryInterface/transaction.repositoryinterface'
 
 import { TransactionEntity } from '../Entity/transaction.entity'
@@ -10,13 +10,13 @@ export class TransactionService {
 
 	protected MemberRepo: MemberRepositoryInterface
 	protected PointRepo: PointRepositoryInterface
-	protected RateRepo: ActivityRateRepositoryInterface
+	protected RateRepo: PointTypeRepositoryInterface
 	protected TrxRepo: TransactionRepositoryInterface
 
 	constructor (
 		MemberRepo: MemberRepositoryInterface,
 		PointRepo: PointRepositoryInterface,
-		RateRepo: ActivityRateRepositoryInterface,
+		RateRepo: PointTypeRepositoryInterface,
 		TrxRepo: TransactionRepositoryInterface
 	) {
 		this.MemberRepo = MemberRepo

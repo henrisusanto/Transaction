@@ -1,6 +1,6 @@
 import { MemberRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/member.repositoryinterface'
 import { PointRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/point.repositoryinterface'
-import { ActivityRateRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/activityrate.repositoryinterface'
+import { PointTypeRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/pointtype.repositoryinterface'
 import { TransactionRepositoryInterface } from '../RepositoryInterface/transaction.repositoryinterface'
 import { TransactionService } from '../Service/transaction.service'
 import { TransactionEntity } from '../Entity/transaction.entity'
@@ -9,13 +9,13 @@ export class ClientCancelTransactionUsecase {
 
     protected memberRepo: MemberRepositoryInterface
     protected pointRepo: PointRepositoryInterface
-    protected rateRepo: ActivityRateRepositoryInterface
+    protected rateRepo: PointTypeRepositoryInterface
     protected trxRepo: TransactionRepositoryInterface
 
     constructor (
         memberRepo: MemberRepositoryInterface,
         pointRepo: PointRepositoryInterface,
-        rateRepo: ActivityRateRepositoryInterface,
+        rateRepo: PointTypeRepositoryInterface,
         trxRepo: TransactionRepositoryInterface
     ) {
         this.memberRepo = memberRepo
