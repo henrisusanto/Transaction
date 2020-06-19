@@ -10,18 +10,18 @@ export class TransactionService {
 
 	protected MemberRepo: MemberRepositoryInterface
 	protected PointRepo: PointRepositoryInterface
-	protected RateRepo: PointTypeRepositoryInterface
+	protected PointTypeRepo: PointTypeRepositoryInterface
 	protected TrxRepo: TransactionRepositoryInterface
 
 	constructor (
 		MemberRepo: MemberRepositoryInterface,
 		PointRepo: PointRepositoryInterface,
-		RateRepo: PointTypeRepositoryInterface,
+		PointTypeRepo: PointTypeRepositoryInterface,
 		TrxRepo: TransactionRepositoryInterface
 	) {
 		this.MemberRepo = MemberRepo
 		this.PointRepo = PointRepo
-		this.RateRepo = RateRepo
+		this.PointTypeRepo = PointTypeRepo
 		this.TrxRepo = TrxRepo
 	}
 
@@ -33,7 +33,7 @@ export class TransactionService {
 			Member.submitSpending (trx)
 			await this.MemberRepo.save (Member)
 	
-			let point = new PointService (this.MemberRepo, this.PointRepo, this.RateRepo)
+			let point = new PointService (this.MemberRepo, this.PointRepo, this.PointTypeRepo)
 			await point.earn ({
 				Member: trx.getMember (),
 				RawAmount: trx.getSpending (),
@@ -52,7 +52,7 @@ export class TransactionService {
 			let Canceler = new TransactionEntity ()
 			Canceler.createCanceler (trx)
 	
-			let Point = new PointService (this.MemberRepo, this.PointRepo, this.RateRepo)
+			let Point = new PointService (this.MemberRepo, this.PointRepo, this.PointTypeRepo)
 			await Point.cancel ({Reference: trx.getId (), Activity: 'TRANSACTION'})
 	
 			let Member = await this.MemberRepo.findOne (trx.getMember ())
