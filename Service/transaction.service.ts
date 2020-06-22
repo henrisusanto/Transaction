@@ -30,7 +30,7 @@ export class TransactionService {
 			let MidTrxId = await this.TrxRepo.insert (trx)
 
 			let Member = await this.MemberRepo.findOne (trx.getMember ())
-			Member.submitSpending (trx)
+			Member.submitTransaction (trx)
 			await this.MemberRepo.save (Member)
 	
 			let point = new PointService (this.MemberRepo, this.PointRepo, this.PointTypeRepo)
@@ -56,7 +56,7 @@ export class TransactionService {
 			await Point.cancel ({Reference: trx.getId (), Activity: 'TRANSACTION'})
 	
 			let Member = await this.MemberRepo.findOne (trx.getMember ())
-			Member.submitSpending (Canceler)
+			Member.cancelTransaction (Canceler)
 			await this.MemberRepo.save (Member)
 	
 			await this.TrxRepo.delete (trx.getId ())

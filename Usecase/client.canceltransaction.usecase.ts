@@ -28,7 +28,8 @@ export class ClientCancelTransactionUsecase {
         try {
             let service = new TransactionService (this.memberRepo, this.pointRepo, this.rateRepo, this.trxRepo)
             let trxToCancel = await this.trxRepo.findById (Id)
-            return await service.submit (trxToCancel)
+            await service.cancel (trxToCancel)
+            return Id
         } catch (e) {
             throw new Error (e)
         }  
