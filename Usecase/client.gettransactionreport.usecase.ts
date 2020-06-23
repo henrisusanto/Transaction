@@ -1,14 +1,26 @@
 import { TransactionRepositoryInterface, ReportParameters } from '../RepositoryInterface/transaction.repositoryinterface'
 import { MemberRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/member.repositoryinterface'
+import { PointRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/point.repositoryinterface'
+import { PointTypeRepositoryInterface } from '../../LoyaltyCore/RepositoryInterface/pointtype.repositoryinterface'
+import { TransactionService } from '../Service/transaction.service'
 
 export class ClientGetTransactionReportUsecase {
 
-    protected trxRepo: TransactionRepositoryInterface
     protected memberRepo: MemberRepositoryInterface
+    protected pointRepo: PointRepositoryInterface
+    protected pointTypeRepo: PointTypeRepositoryInterface
+    protected trxRepo: TransactionRepositoryInterface
 
-    constructor (trxRepo: TransactionRepositoryInterface, memberRepo: MemberRepositoryInterface) {
-        this.trxRepo = trxRepo
+    constructor (
+        memberRepo: MemberRepositoryInterface,
+        pointRepo: PointRepositoryInterface,
+        pointTypeRepo: PointTypeRepositoryInterface,
+        trxRepo: TransactionRepositoryInterface
+    ) {
         this.memberRepo = memberRepo
+        this.pointRepo = pointRepo
+        this.pointTypeRepo = pointTypeRepo
+        this.trxRepo = trxRepo
     }
 
 	public async execute (RecordPerPage: number, CurrentPage: number, Since: Date, Until: Date) {
@@ -26,23 +38,14 @@ export class ClientGetTransactionReportUsecase {
 
         const { TotalRecord, TotalSpending, Result } = await this.trxRepo.getReport (parameter)
 
-        let MemberIds: number[] = Result
-            .map (transaction => transaction.getMember ())
-            .filter((value, index, self) => self.indexOf(value) === index)
-        let Members = await this.memberRepo.findByIDs (MemberIds)
-        let MemberNames: string [] = []
-        Members.forEach (member => {
-            MemberNames[member.getId ()] = member.getFullName ()
-        })
+        let Service = new TransactionService (this.memberRepo, this.pointRepo, this.pointTypeRepo, this.trxRepo)
 
         let reportJSON = {
             Limit: parameter.Limit.toString (),
             Offset: parameter.Offset.toString (),
             TotalRecord,
             TotalSpending,
-            Records: Result.map (transaction => {
-                return transaction.toReport (MemberNames)
-            })
+            Records: await Service.report (Result)
         }
     
         return reportJSON

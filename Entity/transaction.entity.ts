@@ -18,7 +18,7 @@ export interface TrxReport {
 	Time: Date,
 	Member: string,
 	Spending: number,
-	Points: []
+	Points: any[]
 }
 
 export interface TrxHistory {
