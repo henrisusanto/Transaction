@@ -9,24 +9,24 @@ export class ClientSubmitTransactionUsecase {
 
     protected memberRepo: MemberRepositoryInterface
     protected pointRepo: PointRepositoryInterface
-    protected rateRepo: PointTypeRepositoryInterface
+    protected pointTypeRepo: PointTypeRepositoryInterface
     protected trxRepo: TransactionRepositoryInterface
 
     constructor (
         memberRepo: MemberRepositoryInterface,
         pointRepo: PointRepositoryInterface,
-        rateRepo: PointTypeRepositoryInterface,
+        pointTypeRepo: PointTypeRepositoryInterface,
         trxRepo: TransactionRepositoryInterface
     ) {
         this.memberRepo = memberRepo
         this.pointRepo = pointRepo
-        this.rateRepo = rateRepo
+        this.pointTypeRepo = pointTypeRepo
         this.trxRepo = trxRepo
     }
 
     public async execute (Member: number, TrxId: string, Spending: number):Promise <number> {
         try {
-            let service = new TransactionService (this.memberRepo, this.pointRepo, this.rateRepo, this.trxRepo)
+            let service = new TransactionService (this.memberRepo, this.pointRepo, this.pointTypeRepo, this.trxRepo)
             let transaction = new TransactionEntity ()
             transaction.create ({
                 Member,

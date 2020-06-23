@@ -17,7 +17,8 @@ export interface TrxReport {
 	TrxId: string,
 	Time: Date,
 	Member: string,
-	Spending: number
+	Spending: number,
+	Points: []
 }
 
 export interface TrxHistory {
@@ -47,13 +48,14 @@ export class TransactionEntity {
 		this.Spending = trxToCancel.getSpending () * -1
 	}
 
-	public toReport (Members): TrxReport {
+	public toReport (Member): TrxReport {
 		return {
 			Id: this.Id,
 			TrxId: this.TrxId,
 			Time: this.Time,
-			Member: Members[this.Member],
-			Spending: this.Spending
+			Member: Member.getFullName (),
+			Spending: this.Spending,
+			Points: []
 		}
 	}
 
