@@ -66,4 +66,37 @@ export class TransactionService {
 		}
 	}
 
+	public async report (transactions: TransactionEntity[]): Promise <{}[]> {
+		let trxIDs = transactions.map (trx => trx.getId ())
+
+		let memberIDs = transactions
+			.map (transaction => transaction.getMember ())
+			.filter((value, index, self) => self.indexOf(value) === index)
+		var members = await this.MemberRepo.findByIDs (memberIDs)
+
+		var points = await this.PointRepo.findByReferences ({References: trxIDs, Activity: 'TRANSACTION'})
+
+		let trxPointIDs = points.map (point => point.getId ())
+		let childs = await this.PointRepo.findByParents (trxPointIDs)
+		points = points.concat (childs)
+		let pointTypeCodes = points
+			.map (point => point.getActivity ())
+			.filter((value, index, self) => self.indexOf(value) === index)
+		var pointTypes = await this.PointTypeRepo.findByCodes (pointTypeCodes)
+
+		return transactions.map (trx => {
+			let member = members.filter (member => member.getId () === trx.getMember ())
+			let report = trx.toReport (member[0])
+			report.Points = points
+				.filter (point => trx.getId () === point.getReference ())
+				.map (point => {
+					let trxPoint = point.toTransaction ()
+					let Activities = pointTypes.filter (ptype => ptype.getCode () === point.getActivity ())
+					trxPoint.Activity = Activities[0].getDescription ()
+					return trxPoint
+				})
+			return report
+		})
+
+	}
 }
